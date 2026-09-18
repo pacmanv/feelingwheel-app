@@ -1,3 +1,8 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>The Feeling Wheel for Men</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -80,7 +85,11 @@
 }
 
 *{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%;text-size-adjust:100%}
 body{
+  margin:0;
+  padding-top:env(safe-area-inset-top,0px);
+  padding-bottom:env(safe-area-inset-bottom,0px);
   background:var(--bg);
   color:var(--ink);
   font-family:var(--f-body);
@@ -397,6 +406,8 @@ footer{
 }
 </style>
 
+</head>
+<body>
 <div class="wrap">
   <div class="masthead">
     <div>
@@ -891,3 +902,5 @@ renderIntro();
   }catch(_){ /* stays manual */ }
 })();
 </script>
+</body>
+</html>
