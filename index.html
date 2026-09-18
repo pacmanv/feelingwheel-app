@@ -1,0 +1,893 @@
+<title>The Feeling Wheel for Men</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700&family=Source+Serif+4:opsz,wght@8..60,400;8..60,600&display=swap">
+
+<style>
+:root{
+  --bg:#e8eaec;
+  --surface:#fbfbfa;
+  --surface-2:#f1f2f3;
+  --ink:#14181c;
+  --muted:#5b646c;
+  --line:#ccd2d6;
+  --line-soft:#dee2e5;
+  --on-core:#fdfdfc;
+  --focus:#1f6f8b;
+
+  --mad:#b4453c;
+  --sad:#3d6ca5;
+  --scared:#6e5ba3;
+  --joyful:#b4931d;
+  --powerful:#c06a2c;
+  --peaceful:#3f8a6e;
+
+  --core-mix:88%;
+  --mid-mix:42%;
+  --leaf-mix:20%;
+  --dim:.28;
+
+  --f-display:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --f-body:"Source Serif 4",Georgia,"Times New Roman",serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#0f1215;
+    --surface:#171b1f;
+    --surface-2:#1e2328;
+    --ink:#e7eaec;
+    --muted:#98a1a9;
+    --line:#2d343a;
+    --line-soft:#23292e;
+    --on-core:#0d1013;
+    --focus:#5fb6d4;
+
+    --mad:#e0685c;
+    --sad:#6c9ddc;
+    --scared:#9d87d6;
+    --joyful:#dcb841;
+    --powerful:#e08f4e;
+    --peaceful:#5fb992;
+
+    --core-mix:80%;
+    --mid-mix:40%;
+    --leaf-mix:21%;
+    --dim:.46;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#0f1215;
+  --surface:#171b1f;
+  --surface-2:#1e2328;
+  --ink:#e7eaec;
+  --muted:#98a1a9;
+  --line:#2d343a;
+  --line-soft:#23292e;
+  --on-core:#0d1013;
+  --focus:#5fb6d4;
+
+  --mad:#e0685c;
+  --sad:#6c9ddc;
+  --scared:#9d87d6;
+  --joyful:#dcb841;
+  --powerful:#e08f4e;
+  --peaceful:#5fb992;
+
+  --core-mix:80%;
+  --mid-mix:40%;
+  --leaf-mix:21%;
+  --dim:.46;
+}
+
+*{box-sizing:border-box}
+body{
+  background:var(--bg);
+  color:var(--ink);
+  font-family:var(--f-body);
+  font-size:16px;
+  line-height:1.55;
+  -webkit-font-smoothing:antialiased;
+}
+.wrap{
+  max-width:1120px;
+  margin:0 auto;
+  padding-inline:20px;
+  padding-block:28px 40px;
+}
+
+/* ---------- masthead ---------- */
+.masthead{
+  display:flex;
+  align-items:baseline;
+  justify-content:space-between;
+  gap:16px;
+  flex-wrap:wrap;
+  border-bottom:1px solid var(--line);
+  padding-bottom:14px;
+  margin-bottom:26px;
+}
+.masthead h1{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:clamp(20px,3.2vw,27px);
+  letter-spacing:-0.02em;
+  margin:0;
+  text-wrap:balance;
+}
+.masthead p{
+  margin:0;
+  font-size:14px;
+  color:var(--muted);
+  max-width:38ch;
+}
+.mode{
+  font-family:var(--f-display);
+  font-size:10.5px;
+  font-weight:600;
+  text-transform:uppercase;
+  letter-spacing:.11em;
+  color:var(--muted);
+  border:1px solid var(--line);
+  border-radius:999px;
+  padding:4px 10px;
+  white-space:nowrap;
+}
+.mode.on{color:var(--focus);border-color:color-mix(in srgb,var(--focus) 45%,var(--line))}
+
+/* ---------- layout ---------- */
+.stage{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) minmax(0,440px);
+  gap:36px;
+  align-items:start;
+}
+@media (max-width:900px){
+  .stage{grid-template-columns:1fr;gap:24px}
+}
+
+/* ---------- wheel ---------- */
+.wheelbox{position:relative}
+.wheelbox svg{display:block;width:100%;max-width:100%;height:auto}
+.seg{cursor:pointer;transition:opacity .28s ease}
+.seg path{stroke:var(--surface);stroke-width:1;transition:opacity .28s ease}
+.seg text{
+  font-family:var(--f-display);
+  font-weight:600;
+  pointer-events:none;
+  paint-order:stroke;
+}
+.seg.dim{opacity:var(--dim,.3)}
+.seg.hot path{stroke:var(--ink);stroke-width:1.6}
+.seg:hover path{stroke:var(--ink);stroke-width:1.4}
+.hub{
+  font-family:var(--f-display);
+  font-size:9.5px;
+  font-weight:600;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  fill:var(--muted);
+}
+.wheel-note{
+  margin:10px 2px 0;
+  font-family:var(--f-display);
+  font-size:11.5px;
+  font-weight:500;
+  letter-spacing:.04em;
+  color:var(--muted);
+}
+
+/* ---------- panel ---------- */
+.panel{
+  background:var(--surface);
+  border:1px solid var(--line);
+  border-radius:4px;
+  padding:26px 24px 22px;
+  position:relative;
+}
+.panel::before{
+  content:"";
+  position:absolute;
+  inset:-1px -1px auto -1px;
+  height:3px;
+  background:var(--rail,var(--line));
+  border-radius:4px 4px 0 0;
+  transition:background .3s ease;
+}
+
+.trail{
+  display:flex;
+  align-items:center;
+  gap:7px;
+  flex-wrap:wrap;
+  font-family:var(--f-display);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:16px;
+  min-height:16px;
+}
+.trail b{color:var(--ink);font-weight:700}
+.trail span{opacity:.5}
+
+.qtext{
+  font-family:var(--f-body);
+  font-size:clamp(20px,2.6vw,25px);
+  font-weight:600;
+  line-height:1.3;
+  letter-spacing:-0.01em;
+  margin:0 0 20px;
+  text-wrap:balance;
+}
+.sub{color:var(--muted);font-size:14.5px;margin:-12px 0 20px}
+
+.opts{display:flex;flex-direction:column;gap:8px;margin:0;padding:0;list-style:none}
+.opt{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:12px;
+  align-items:start;
+  width:100%;
+  text-align:left;
+  font:inherit;
+  color:inherit;
+  background:var(--surface-2);
+  border:1px solid var(--line-soft);
+  border-left:3px solid var(--dot,var(--line));
+  border-radius:3px;
+  padding:11px 13px;
+  cursor:pointer;
+  transition:background .14s ease,border-color .14s ease,transform .14s ease;
+}
+.opt:hover{background:color-mix(in srgb,var(--dot,var(--ink)) 9%,var(--surface-2));border-color:var(--line)}
+.opt:active{transform:translateY(1px)}
+.opt:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.opt .lbl{font-size:16px;line-height:1.4}
+.opt .wd{
+  font-family:var(--f-display);
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--dot,var(--muted));
+  padding-top:4px;
+  white-space:nowrap;
+}
+
+.row{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px;align-items:center}
+.btn{
+  font-family:var(--f-display);
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:.01em;
+  color:var(--ink);
+  background:transparent;
+  border:1px solid var(--line);
+  border-radius:3px;
+  padding:8px 14px;
+  cursor:pointer;
+  transition:background .14s ease,border-color .14s ease;
+}
+.btn:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn:focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+.btn.primary{
+  background:var(--ink);
+  color:var(--surface);
+  border-color:var(--ink);
+}
+.btn.primary:hover{background:color-mix(in srgb,var(--ink) 82%,var(--bg))}
+.btn.ghost{border-color:transparent;color:var(--muted);padding-inline:6px}
+.btn.ghost:hover{color:var(--ink);background:transparent;text-decoration:underline;text-underline-offset:3px}
+.btn[disabled]{opacity:.45;cursor:default}
+
+textarea{
+  width:100%;
+  font:inherit;
+  font-size:15.5px;
+  color:var(--ink);
+  background:var(--surface-2);
+  border:1px solid var(--line-soft);
+  border-radius:3px;
+  padding:11px 12px;
+  resize:vertical;
+  min-height:86px;
+}
+textarea:focus-visible{outline:2px solid var(--focus);outline-offset:1px;border-color:transparent}
+label.fld{
+  display:block;
+  font-family:var(--f-display);
+  font-size:10.5px;
+  font-weight:600;
+  letter-spacing:.11em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin-bottom:7px;
+}
+
+/* ---------- thinking ---------- */
+.thinking{
+  display:flex;
+  align-items:center;
+  gap:9px;
+  font-family:var(--f-display);
+  font-size:12.5px;
+  font-weight:500;
+  letter-spacing:.04em;
+  color:var(--muted);
+  padding:6px 0 2px;
+}
+.pip{
+  width:7px;height:7px;border-radius:50%;
+  background:var(--rail,var(--muted));
+  animation:pulse 1.1s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{opacity:.25;transform:scale(.8)}50%{opacity:1;transform:scale(1)}}
+@media (prefers-reduced-motion:reduce){
+  .pip{animation:none;opacity:.7}
+  .seg,.seg path,.opt,.panel::before{transition:none}
+}
+
+/* ---------- result ---------- */
+.verdict{
+  font-family:var(--f-display);
+  font-weight:700;
+  font-size:clamp(34px,6vw,50px);
+  line-height:1.02;
+  letter-spacing:-0.035em;
+  margin:2px 0 6px;
+  color:var(--rail,var(--ink));
+}
+.defn{
+  font-size:17px;
+  line-height:1.5;
+  margin:0 0 20px;
+  padding-bottom:18px;
+  border-bottom:1px solid var(--line-soft);
+}
+.blk{margin-bottom:20px}
+.blk h3{
+  font-family:var(--f-display);
+  font-size:10.5px;
+  font-weight:700;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--muted);
+  margin:0 0 8px;
+}
+.blk p{margin:0;font-size:16px;line-height:1.55}
+.steps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:9px}
+.steps li{
+  display:grid;
+  grid-template-columns:auto 1fr;
+  gap:11px;
+  font-size:16px;
+  line-height:1.45;
+}
+.steps .n{
+  font-family:var(--f-display);
+  font-size:11px;
+  font-weight:700;
+  letter-spacing:.06em;
+  color:var(--rail,var(--muted));
+  padding-top:4px;
+  font-variant-numeric:tabular-nums;
+}
+.err{
+  font-size:14.5px;
+  color:var(--muted);
+  border-left:2px solid var(--line);
+  padding-left:11px;
+  margin:0 0 16px;
+}
+
+footer{
+  margin-top:34px;
+  padding-top:14px;
+  border-top:1px solid var(--line);
+  font-family:var(--f-display);
+  font-size:11.5px;
+  font-weight:500;
+  line-height:1.6;
+  color:var(--muted);
+  display:flex;
+  justify-content:space-between;
+  gap:14px;
+  flex-wrap:wrap;
+}
+</style>
+
+<div class="wrap">
+  <div class="masthead">
+    <div>
+      <h1>The Feeling Wheel for Men</h1>
+      <p>Six feelings in. Seventy-two out. Answer three questions and find the word.</p>
+    </div>
+    <span class="mode" id="mode">Checking&hellip;</span>
+  </div>
+
+  <div class="stage">
+    <div class="wheelbox">
+      <div id="wheel"></div>
+      <p class="wheel-note" id="wheelNote">Tap any segment to jump straight to it.</p>
+    </div>
+
+    <div class="panel" id="panel"></div>
+  </div>
+
+  <footer>
+    <span>Structure after Gloria Willcox&rsquo;s Feeling Wheel (1982).</span>
+    <span>Not therapy or a diagnosis. In crisis in the US: call or text 988.</span>
+  </footer>
+</div>
+
+<script>
+/* ============================================================
+   THE WHEEL
+   6 core feelings, 6 each in the middle ring, 2 each on the rim.
+   ============================================================ */
+const WHEEL = [
+  { core:"Joyful", key:"joyful",
+    gloss:"Lit up. You want more of this.",
+    groups:[
+      {word:"Excited",   gloss:"Keyed up, ready to move",       kids:[["Daring","Willing to risk something"],["Fascinated","Pulled in, can't look away"]]},
+      {word:"Sexy",      gloss:"Wanted, physical, alive",        kids:[["Sensuous","Tuned into your body"],["Desirable","Someone wants you"]]},
+      {word:"Energetic", gloss:"Full tank, hard to sit still",   kids:[["Playful","Loose, up for anything"],["Stimulated","Everything's interesting"]]},
+      {word:"Cheerful",  gloss:"Light, easy, things are fine",   kids:[["Amused","Something's genuinely funny"],["Delighted","A small thing made your day"]]},
+      {word:"Creative",  gloss:"Ideas arriving faster than you can use them", kids:[["Inspired","You know what to make"],["Curious","You want to find out"]]},
+      {word:"Hopeful",   gloss:"You think it's going to work",   kids:[["Optimistic","Betting on the good version"],["Eager","Can't wait to start"]]},
+    ]},
+  { core:"Powerful", key:"powerful",
+    gloss:"Solid. You take up your space.",
+    groups:[
+      {word:"Faithful",   gloss:"You'll stand by it",            kids:[["Loyal","You don't walk away"],["Committed","You're in, all the way"]]},
+      {word:"Important",  gloss:"You matter here",               kids:[["Valuable","You add something real"],["Worthwhile","Your time was well spent"]]},
+      {word:"Appreciated",gloss:"Someone noticed",               kids:[["Seen","Somebody actually got it"],["Thanked","The work was credited"]]},
+      {word:"Respected",  gloss:"Your word carries",             kids:[["Admired","People look up to you"],["Credible","You're believed"]]},
+      {word:"Proud",      gloss:"You did the thing",             kids:[["Accomplished","Finished, and it's good"],["Successful","It worked"]]},
+      {word:"Confident",  gloss:"No doubt you can handle it",    kids:[["Capable","You have what it takes"],["Assertive","You said what you wanted"]]},
+    ]},
+  { core:"Peaceful", key:"peaceful",
+    gloss:"Settled. Nothing pulling at you.",
+    groups:[
+      {word:"Content",   gloss:"Enough, and you know it",        kids:[["Satisfied","Nothing missing right now"],["At ease","Shoulders down"]]},
+      {word:"Thoughtful",gloss:"Turning something over slowly",  kids:[["Reflective","Looking back without flinching"],["Aware","You can see it clearly"]]},
+      {word:"Intimate",  gloss:"Close in, guard down",           kids:[["Close","No distance left"],["Connected","You're on the same wire"]]},
+      {word:"Loving",    gloss:"It goes out from you",           kids:[["Tender","Careful with them"],["Warm","Glad they're here"]]},
+      {word:"Trusting",  gloss:"You're not bracing",             kids:[["Secure","The ground holds"],["Open","Nothing to hide"]]},
+      {word:"Nurturing", gloss:"You want to look after someone", kids:[["Compassionate","Their pain lands on you"],["Generous","Giving without a tally"]]},
+    ]},
+  { core:"Sad", key:"sad",
+    gloss:"Heavy. Slowed down. Something's missing.",
+    groups:[
+      {word:"Guilty",    gloss:"You did it and you know it",     kids:[["Remorseful","You'd take it back"],["Regretful","You chose wrong"]]},
+      {word:"Ashamed",   gloss:"Not what you did &mdash; what you are", kids:[["Foolish","You look stupid to yourself"],["Exposed","Someone saw the real thing"]]},
+      {word:"Depressed", gloss:"Flat, sunk, nothing reaches you",kids:[["Miserable","Every hour is work"],["Despairing","You can't see it changing"]]},
+      {word:"Lonely",    gloss:"Nobody to call",                 kids:[["Isolated","Surrounded and still alone"],["Abandoned","They left"]]},
+      {word:"Bored",     gloss:"Nothing pulls at you",           kids:[["Apathetic","Can't be bothered to care"],["Indifferent","It stopped mattering"]]},
+      {word:"Tired",     gloss:"Out of fuel",                    kids:[["Drained","Given more than you had"],["Numb","You stopped feeling it"]]},
+    ]},
+  { core:"Mad", key:"mad",
+    gloss:"Hot, tight. Something's wrong and someone did it.",
+    groups:[
+      {word:"Hurt",      gloss:"They got through your guard",    kids:[["Betrayed","Someone you trusted did it"],["Devastated","It knocked you down"]]},
+      {word:"Hostile",   gloss:"Ready to go at anyone",          kids:[["Irritated","Everything grates"],["Frustrated","Blocked, again"]]},
+      {word:"Angry",     gloss:"Plain heat",                     kids:[["Furious","Hard to hold in"],["Enraged","Past reasoning with"]]},
+      {word:"Selfish",   gloss:"You want yours",                 kids:[["Jealous","They have what should be yours"],["Resentful","You've been carrying it too long"]]},
+      {word:"Hateful",   gloss:"You want them to lose",          kids:[["Bitter","It went sour and stayed"],["Vengeful","You want to even it"]]},
+      {word:"Critical",  gloss:"Everything is wrong and you can prove it", kids:[["Skeptical","You don't buy it"],["Sarcastic","The knife goes in sideways"]]},
+    ]},
+  { core:"Scared", key:"scared",
+    gloss:"On edge. Bracing for something.",
+    groups:[
+      {word:"Rejected",  gloss:"You were not picked",            kids:[["Excluded","Left out on purpose"],["Dismissed","Waved off like nothing"]]},
+      {word:"Confused",  gloss:"You can't get your bearings",    kids:[["Bewildered","None of it adds up"],["Discouraged","You've stopped believing it works"]]},
+      {word:"Helpless",  gloss:"Nothing you do moves it",        kids:[["Powerless","No lever to pull"],["Weak","Not enough to hold it"]]},
+      {word:"Submissive",gloss:"Going along to stay safe",       kids:[["Worthless","You don't rate a say"],["Inferior","Everyone else is more"]]},
+      {word:"Insecure",  gloss:"Waiting to be found out",        kids:[["Inadequate","Not up to it"],["Timid","You don't speak up"]]},
+      {word:"Anxious",   gloss:"Running the bad version on loop",kids:[["Worried","Something's coming"],["Overwhelmed","Too much at once"]]},
+    ]},
+];
+
+/* Generic next steps, per core, used when Claude isn't available. */
+const FALLBACK_STEPS = {
+  joyful:  ["Tell one person about it before the day ends.","Write down what caused it so you can do it again."],
+  powerful:["Use it now: make the call you've been putting off.","Name out loud what you did to earn it."],
+  peaceful:["Do nothing for ten minutes and let it stay.","Notice what got you here so you can find it again."],
+  sad:     ["Text one person the actual sentence: \"Rough day.\"","Get outside for fifteen minutes. Don't bring your phone."],
+  mad:     ["Move it out of your body first &mdash; walk hard for ten minutes.","Write what you'd say to them. Don't send it tonight."],
+  scared:  ["Write the exact thing you're afraid of, in one sentence.","Name one part of it you can control, and do that part."],
+};
+
+/* ============================================================
+   DRAW THE WHEEL
+   ============================================================ */
+const CX=300, CY=300, R0=0, R1=104, R2=198, R3=288;
+
+function polar(r,deg){const a=(deg-90)*Math.PI/180;return [CX+r*Math.cos(a), CY+r*Math.sin(a)];}
+function arc(r0,r1,a0,a1){
+  const [x0,y0]=polar(r1,a0),[x1,y1]=polar(r1,a1),[x2,y2]=polar(r0,a1),[x3,y3]=polar(r0,a0);
+  const big=(a1-a0)>180?1:0;
+  if(r0<=0.01) return `M${CX} ${CY} L${x0} ${y0} A${r1} ${r1} 0 ${big} 1 ${x1} ${y1} Z`;
+  return `M${x0} ${y0} A${r1} ${r1} 0 ${big} 1 ${x1} ${y1} L${x2} ${y2} A${r0} ${r0} 0 ${big} 0 ${x3} ${y3} Z`;
+}
+function esc(s){return String(s).replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");}
+
+function buildWheel(){
+  let s = `<svg viewBox="0 0 600 600" role="img" aria-label="Feeling wheel: six core feelings, thirty-six in the middle ring, seventy-two on the rim.">`;
+  WHEEL.forEach((c,ci)=>{
+    const a0 = ci*60, a1 = a0+60;
+    const hue = `var(--${c.key})`;
+
+    // rim
+    c.groups.forEach((g,gi)=>{
+      g.kids.forEach((k,ki)=>{
+        const b0 = a0 + gi*10 + ki*5, b1 = b0+5, m=(b0+b1)/2;
+        const [tx,ty]=polar(243,m);
+        const rot = m>180 ? m+90 : m-90;
+        s += `<g class="seg" data-c="${ci}" data-g="${gi}" data-k="${ki}" tabindex="0" role="button" aria-label="${esc(k[0])}">`
+          +  `<title>${esc(k[0])} — ${esc(k[1])}</title>`
+          +  `<path d="${arc(R2,R3,b0,b1)}" fill="color-mix(in srgb, ${hue} var(--leaf-mix), var(--surface))"/>`
+          +  `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" transform="rotate(${rot.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)})" text-anchor="middle" dominant-baseline="central" font-size="7.4" fill="var(--ink)">${esc(k[0])}</text>`
+          +  `</g>`;
+      });
+    });
+
+    // middle
+    c.groups.forEach((g,gi)=>{
+      const b0=a0+gi*10, b1=b0+10, m=(b0+b1)/2;
+      const [tx,ty]=polar(150,m);
+      const rot = m>180 ? m+90 : m-90;
+      s += `<g class="seg" data-c="${ci}" data-g="${gi}" tabindex="0" role="button" aria-label="${esc(g.word)}">`
+        +  `<title>${esc(g.word)} — ${esc(g.gloss).replace(/&amp;mdash;/g,"—")}</title>`
+        +  `<path d="${arc(R1,R2,b0,b1)}" fill="color-mix(in srgb, ${hue} var(--mid-mix), var(--surface))"/>`
+        +  `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" transform="rotate(${rot.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)})" text-anchor="middle" dominant-baseline="central" font-size="10.2" fill="var(--ink)">${esc(g.word)}</text>`
+        +  `</g>`;
+    });
+
+    // core
+    const m=(a0+a1)/2;
+    const [tx,ty]=polar(66,m);
+    const rot = m>180 ? m+90 : m-90;
+    s += `<g class="seg" data-c="${ci}" tabindex="0" role="button" aria-label="${esc(c.core)}">`
+      +  `<title>${esc(c.core)} — ${esc(c.gloss)}</title>`
+      +  `<path d="${arc(R0,R1,a0,a1)}" fill="color-mix(in srgb, ${hue} var(--core-mix), var(--surface))"/>`
+      +  `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" transform="rotate(${rot.toFixed(1)} ${tx.toFixed(1)} ${ty.toFixed(1)})" text-anchor="middle" dominant-baseline="central" font-size="14" letter-spacing="0.06em" fill="var(--on-core)">${esc(c.core.toUpperCase())}</text>`
+      +  `</g>`;
+  });
+  s += `</svg>`;
+  return s;
+}
+
+const wheelEl = document.getElementById('wheel');
+wheelEl.innerHTML = buildWheel();
+
+function paintWheel(){
+  const {core,group} = state;
+  const segs = wheelEl.querySelectorAll('.seg');
+  segs.forEach(sg=>{
+    const c=+sg.dataset.c, g=sg.dataset.g===undefined?null:+sg.dataset.g, k=sg.dataset.k===undefined?null:+sg.dataset.k;
+    let on = true, hot = false;
+    if(core!==null){
+      on = (c===core);
+      if(on && group!==null && g!==null) on = (g===group);
+      hot = (c===core) && (g===null||g===group) && (k===null||k===state.leaf);
+      if(state.leaf===null && k!==null) hot=false;
+    }
+    sg.classList.toggle('dim', !on);
+    sg.classList.toggle('hot', hot && core!==null);
+  });
+}
+
+wheelEl.addEventListener('click', e=>{
+  const sg = e.target.closest('.seg'); if(!sg) return;
+  jumpTo(+sg.dataset.c, sg.dataset.g===undefined?null:+sg.dataset.g, sg.dataset.k===undefined?null:+sg.dataset.k);
+});
+wheelEl.addEventListener('keydown', e=>{
+  if(e.key!=='Enter' && e.key!==' ') return;
+  const sg = e.target.closest('.seg'); if(!sg) return;
+  e.preventDefault();
+  jumpTo(+sg.dataset.c, sg.dataset.g===undefined?null:+sg.dataset.g, sg.dataset.k===undefined?null:+sg.dataset.k);
+});
+
+/* ============================================================
+   STATE
+   ============================================================ */
+const state = {
+  screen:'intro',      // intro | step | result
+  ctx:'',
+  core:null, group:null, leaf:null,
+  answers:[],          // the plain-language labels he picked
+  reword:0,
+};
+let sample = null;     // set if Claude is reachable
+let busy = null;       // AbortController
+
+const panel = document.getElementById('panel');
+const modeChip = document.getElementById('mode');
+const wheelNote = document.getElementById('wheelNote');
+
+function rail(){
+  if(state.core===null) return '';
+  return `--rail:var(--${WHEEL[state.core].key});`;
+}
+function setRail(){ panel.setAttribute('style', rail()); }
+
+function trailHTML(){
+  const bits=[];
+  if(state.core!==null) bits.push(WHEEL[state.core].core);
+  if(state.group!==null) bits.push(WHEEL[state.core].groups[state.group].word);
+  if(state.leaf!==null) bits.push(WHEEL[state.core].groups[state.group].kids[state.leaf][0]);
+  if(!bits.length) return `<div class="trail"><span>Start here</span></div>`;
+  return `<div class="trail">` + bits.map((b,i)=> (i?'<span>&rsaquo;</span>':'') + `<b>${esc(b)}</b>`).join('') + `</div>`;
+}
+
+/* ============================================================
+   SCREENS
+   ============================================================ */
+function renderIntro(){
+  state.screen='intro';
+  state.core=state.group=state.leaf=null;
+  state.answers=[]; state.reword=0;
+  setRail(); paintWheel();
+  wheelNote.textContent = 'Tap any segment to jump straight to it.';
+  panel.innerHTML = `
+    ${trailHTML()}
+    <h2 class="qtext">Something's going on and you can't name it.</h2>
+    <p class="sub">Three questions. You don't have to get them right &mdash; just pick whichever is closest.</p>
+    <label class="fld" for="ctx">What set this off? (optional)</label>
+    <textarea id="ctx" placeholder="Got chewed out in front of the team. Haven't said a word since."></textarea>
+    <div class="row">
+      <button class="btn primary" id="go">Start</button>
+      <button class="btn ghost" id="skip">Skip it &mdash; just ask me</button>
+    </div>`;
+  const ta = panel.querySelector('#ctx');
+  ta.value = state.ctx;
+  panel.querySelector('#go').onclick = ()=>{ state.ctx = ta.value.trim().slice(0,600); askLayer(); };
+  panel.querySelector('#skip').onclick = ()=>{ state.ctx=''; askLayer(); };
+}
+
+function renderThinking(title){
+  panel.innerHTML = trailHTML()
+    + `<h2 class="qtext">${esc(title)}</h2>`
+    + `<div class="thinking"><span class="pip"></span>Working out the question&hellip;</div>`
+    + `<div class="row"><button class="btn ghost" id="stop">Stop and pick from a list</button></div>`;
+  panel.querySelector('#stop').onclick = ()=>{ busy?.abort(); };
+}
+
+function renderStep(question, opts, note){
+  state.screen='step';
+  setRail(); paintWheel();
+  const depth = state.core===null?0:(state.group===null?1:2);
+  wheelNote.textContent = ['The inner ring. Six ways it can start.','The middle ring. Six shades of that.','The rim. Last two.'][depth];
+
+  panel.innerHTML = trailHTML()
+    + (note?`<p class="err">${note}</p>`:'')
+    + `<h2 class="qtext">${esc(question)}</h2>`
+    + `<ul class="opts">` + opts.map((o,i)=>
+        `<li><button class="opt" data-i="${i}" style="--dot:var(--${o.hue})">
+           <span class="wd">${esc(o.word)}</span>
+           <span class="lbl">${o.label}</span>
+         </button></li>`).join('') + `</ul>`
+    + `<div class="row">
+         ${state.core!==null?`<button class="btn" id="back">Back</button>`:''}
+         <button class="btn ghost" id="none">None of these fit</button>
+       </div>`;
+
+  panel.querySelectorAll('.opt').forEach(b=>{
+    b.onclick = ()=> choose(opts[+b.dataset.i]);
+    b.onmouseenter = ()=>{ preview(opts[+b.dataset.i]); };
+    b.onmouseleave = ()=> paintWheel();
+    b.onfocus = ()=>{ preview(opts[+b.dataset.i]); };
+    b.onblur = ()=> paintWheel();
+  });
+  panel.querySelector('#none').onclick = ()=>{ state.reword++; askLayer(true); };
+  const back = panel.querySelector('#back');
+  if(back) back.onclick = stepBack;
+}
+
+function preview(o){
+  paintWheel();
+  const sel = `.seg[data-c="${o.ci}"]` + (o.gi!==null?`[data-g="${o.gi}"]`:'') + (o.ki!==null?`[data-k="${o.ki}"]`:'');
+  wheelEl.querySelectorAll(sel).forEach(sg=>{ sg.classList.remove('dim'); sg.classList.add('hot'); });
+}
+
+function stepBack(){
+  if(state.leaf!==null) state.leaf=null;
+  else if(state.group!==null){ state.group=null; state.answers.pop(); }
+  else if(state.core!==null){ state.core=null; state.answers.pop(); return renderIntro(); }
+  state.reword=0;
+  askLayer();
+}
+
+function choose(o){
+  state.answers.push(o.label.replace(/<[^>]*>/g,''));
+  state.reword=0;
+  if(o.ki!==null){ state.core=o.ci; state.group=o.gi; state.leaf=o.ki; return renderResult(); }
+  if(o.gi!==null){ state.core=o.ci; state.group=o.gi; return askLayer(); }
+  state.core=o.ci; return askLayer();
+}
+
+function jumpTo(ci,gi,ki){
+  busy?.abort();
+  state.core=ci; state.group=gi; state.leaf=ki; state.reword=0;
+  state.answers = state.answers.slice(0, (gi===null?0:(ki===null?1:2)));
+  if(ki!==null) return renderResult();
+  askLayer();
+}
+
+/* ============================================================
+   LAYER QUESTIONS
+   ============================================================ */
+function layerOptions(){
+  if(state.core===null){
+    return WHEEL.map((c,ci)=>({ci,gi:null,ki:null,word:c.core,hue:c.key,label:c.gloss}));
+  }
+  const c = WHEEL[state.core];
+  if(state.group===null){
+    return c.groups.map((g,gi)=>({ci:state.core,gi,ki:null,word:g.word,hue:c.key,label:g.gloss}));
+  }
+  return c.groups[state.group].kids.map((k,ki)=>({ci:state.core,gi:state.group,ki,word:k[0],hue:c.key,label:k[1]}));
+}
+
+const STATIC_Q = [
+  "Which of these is closest to what's in you right now?",
+  "Which version of it is this?",
+  "Last call. Which one?",
+];
+
+async function askLayer(reword){
+  const opts = layerOptions();
+  const depth = state.core===null?0:(state.group===null?1:2);
+  setRail(); paintWheel();
+
+  if(!sample){ return renderStep(STATIC_Q[depth], opts, null); }
+
+  busy?.abort();
+  busy = new AbortController();
+  const sig = busy.signal;
+  renderThinking(STATIC_Q[depth]);
+
+  const where = state.core===null ? "nothing yet"
+    : (state.group===null ? WHEEL[state.core].core
+       : WHEEL[state.core].core + " > " + WHEEL[state.core].groups[state.group].word);
+
+  const prompt =
+`A man is trying to name what he is feeling. He is using a feeling wheel and has narrowed it this far: ${where}.
+${state.ctx ? `What he said set it off: "${state.ctx}"` : `He did not say what set it off.`}
+${state.answers.length ? `He already picked: ${state.answers.map(a=>`"${a}"`).join(", ")}` : ``}
+
+He now has to choose between exactly these ${opts.length} words: ${opts.map(o=>o.word).join(", ")}.
+
+Write ONE question, 14 words or fewer, that helps him tell these apart. Ask about his body, what he wants to do, what he keeps replaying, or what he wants from the other person. Plain and direct, the way a straight-talking friend asks. No therapy language, no "I sense", no "it sounds like", no softening.
+
+Then for each word write a label of 4 to 10 words in his own voice - something he would actually say or notice - that points at that word WITHOUT using the word itself or an obvious synonym.
+${reword ? `He said none of your last set fit. Come at it from a completely different angle this time.` : ``}
+
+Reply with only JSON:
+{"question":"...","options":[{"word":"...","label":"..."}]}
+Use every word above exactly once, spelled exactly as given.`;
+
+  try{
+    const data = await sample.json(prompt, {
+      modelTier:"quick",
+      signal:sig,
+      cache: reword ? {gcTime:300000, refresh:true} : true,
+    });
+    if(sig.aborted) return;
+    const byWord = new Map(opts.map(o=>[o.word.toLowerCase(), o]));
+    const out = [];
+    for(const row of (Array.isArray(data?.options)?data.options:[])){
+      const hit = byWord.get(String(row?.word||'').trim().toLowerCase());
+      if(hit && row?.label && !out.includes(hit)){ out.push({...hit, label: esc(String(row.label).trim())}); }
+    }
+    for(const o of opts) if(!out.some(x=>x.word===o.word)) out.push(o);
+    const q = String(data?.question||'').trim() || STATIC_Q[depth];
+    renderStep(q, out.slice(0,opts.length), null);
+  }catch(e){
+    if(sig.aborted || e?.code==='cancelled') return renderStep(STATIC_Q[depth], opts, null);
+    renderStep(STATIC_Q[depth], opts, noteFor(e));
+  }
+}
+
+function noteFor(e){
+  switch(e?.code){
+    case 'not_granted': case 'sampling_disabled': case 'not_declared': case 'capability_disabled':
+      sample=null; setMode(false);
+      return null;
+    case 'rate_limited': return "Claude is rate-limited right now, so here's the plain list.";
+    case 'refused': case 'empty_completion': case 'invalid_json':
+      return "Couldn't get a clean question back. Pick from the words themselves.";
+    default: return "Couldn't reach Claude just now. Pick from the words themselves.";
+  }
+}
+
+/* ============================================================
+   RESULT
+   ============================================================ */
+function renderResult(){
+  state.screen='result';
+  setRail(); paintWheel();
+  const c = WHEEL[state.core], g = c.groups[state.group], k = g.kids[state.leaf];
+  wheelNote.textContent = 'That segment, lit up on the rim.';
+
+  const base = `
+    ${trailHTML()}
+    <div class="verdict">${esc(k[0])}</div>
+    <p class="defn" id="defn">${k[1]}.</p>
+    <div class="blk" id="why"></div>
+    <div class="blk" id="steps"></div>
+    <div class="row">
+      <button class="btn" id="notit">That's not it</button>
+      <button class="btn ghost" id="over">Start over</button>
+    </div>`;
+  panel.innerHTML = base;
+  panel.querySelector('#notit').onclick = ()=>{ state.leaf=null; state.answers.pop(); askLayer(true); };
+  panel.querySelector('#over').onclick = renderIntro;
+
+  const whyEl = panel.querySelector('#why');
+  const stepsEl = panel.querySelector('#steps');
+
+  const staticSteps = ()=>{
+    stepsEl.innerHTML = `<h3>What to do with it</h3><ul class="steps">`
+      + FALLBACK_STEPS[c.key].map((s,i)=>`<li><span class="n">${i+1}</span><span>${s}</span></li>`).join('')
+      + `</ul>`;
+  };
+
+  if(!sample){ staticSteps(); return; }
+
+  whyEl.innerHTML = `<h3>Why this one</h3><div class="thinking"><span class="pip"></span>Reading it back&hellip;</div>`;
+
+  busy?.abort();
+  busy = new AbortController();
+  const sig = busy.signal;
+
+  const prompt =
+`A man used a feeling wheel and landed on "${k[0]}" (${c.core} > ${g.word} > ${k[0]}).
+${state.ctx ? `What set it off: "${state.ctx}"` : `He did not say what set it off.`}
+${state.answers.length ? `The answers he picked on the way: ${state.answers.map(a=>`"${a}"`).join(", ")}` : ``}
+
+Talk to him directly, second person. Plain and direct, the way a straight-talking friend talks. No therapy language, no "I sense", no "it sounds like", no praise for opening up, no questions back.
+If anything he wrote suggests he may be in real danger, say so plainly in "why" and make the first step telling someone today.
+
+Reply with only JSON:
+{"definition":"one sentence, 20 words max, what this feeling actually is",
+ "why":"2-3 sentences tying his own answers to this word, and what it is really pointing at",
+ "steps":["one concrete thing to do in the next hour, 14 words max","one more, 14 words max"]}`;
+
+  sample.json(prompt, {modelTier:"quick", signal:sig})
+    .then(d=>{
+      if(sig.aborted) return;
+      if(d?.definition) panel.querySelector('#defn').textContent = String(d.definition).trim();
+      whyEl.innerHTML = `<h3>Why this one</h3><p>${esc(String(d?.why||'').trim())||k[1]+'.'}</p>`;
+      const st = Array.isArray(d?.steps) ? d.steps.slice(0,3).map(s=>esc(String(s).trim())).filter(Boolean) : [];
+      if(st.length){
+        stepsEl.innerHTML = `<h3>What to do with it</h3><ul class="steps">`
+          + st.map((s,i)=>`<li><span class="n">${i+1}</span><span>${s}</span></li>`).join('') + `</ul>`;
+      } else staticSteps();
+    })
+    .catch(e=>{
+      if(sig.aborted || e?.code==='cancelled') return;
+      if(['not_granted','sampling_disabled','not_declared','capability_disabled'].includes(e?.code)){ sample=null; setMode(false); }
+      whyEl.innerHTML = '';
+      staticSteps();
+    });
+}
+
+/* ============================================================
+   BOOT
+   ============================================================ */
+function setMode(on){
+  modeChip.textContent = on ? 'Guided by Claude' : 'Manual mode';
+  modeChip.classList.toggle('on', !!on);
+}
+setMode(false);
+renderIntro();
+
+(async ()=>{
+  try{
+    const s = await window.claude?.use?.("sample");
+    if(s){ sample = s; setMode(true); }
+  }catch(_){ /* stays manual */ }
+})();
+</script>
